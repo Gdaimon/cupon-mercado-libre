@@ -1,55 +1,42 @@
-#language: java
-#os: osx
-#jdk:
-#  - oraclejdk8
-#git:
-#  depth: 3
-#branches:
-#  only:
-#    - master
-#notifications:
-#  email:
-#    recipients:
-#      - darkklitos@gmail.com
-##addons:
-##  sonarcloud:
-##    organization: "gdaimon"
-##    token:
-##      secure: ${SONAR_TOKEN}
-##    branches:
-##      - master
-##
-##script:
-##  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-##  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
-#deploy:
-#  provider: heroku
-#  api_key: ${HEROKU}
-#  app: cupon-mercado-libre
-#  on:
-#    branch: master
-#    #repo: Gdaimon/cupon-mercado-libre
-#before_install:
-#  - chmod +x mvnw
-#
-#
-##  # Required metadata
-##  sonar.projectKey=java-sonar-runner-simple:master
-##  sonar.projectName=Rss-service
-##  sonar.projectVersion=1.0
-##
-##  # Language
-##  sonar.language=java
-##
-##  # Encoding of the source files
-##  sonar.sourceEncoding=UTF-8
-
 language: java
-#jdk:
-#  - oraclejdk8
+os: osx
+git:
+  depth: 3
+branches:
+  only:
+    - master
+notifications:
+  email:
+    recipients:
+      - darkklitos@gmail.com
+addons:
+  sonarcloud:
+    organization: "gdaimon"
+    token:
+      secure: SKZ4IB0N8i1khFdstcxMFWdeF0hkPW54Pz3MNhxZEc2NtRjsGjGcE3LF/R3lFO/ohWhUHW+Y4oDlG/CIFrxE9aJY0hISBTtdxp60d5buiFBY0hwU4+HlbvBo2LY4XWRXpQIxXKnV6j/rs7yCAG7WDVupzG/CwQftrNBP7Cid1ARDXAV2O/2LizdGi+wh1jnZ+I2JugxFwlsycZXKKsMZ/yJ+R8ulYCvfIDKoAPMwPUc8mTnocZuP527rE3a6KGRMxVc5WjMildOUmmrytvQ8NM0Y1Y80iL23aa053N2evjts9sbuX/HdoChTITX12HHW31vXnmrWPaRnuii4GV92I1PKC/TUI27049pgZigdHmojke4KSMEJK1hnaJPxJoZyC/mLopSqdzUWJsYsDLWxVjiiT2FOw/lql1c6NPu+EVX+uDLZAVCqU36yGVjHR7yT52PClC3DupsdP4puLlrQGdVET8Szke0YwkeO/F8v9fIhXArpdRNSOLS+/Gs5p7+LQySq4NKzZrCDVXFRm2gC0/swPD2uOUsNyBdRt9XF5GTtuKpFOQE/9JTPd54seACJDMXzXn9nCj8j9MCdhaJB5OdiXVnUKQAttNvavAQ3tv2BzWm2V/K2E+1kExZbxvUDU4kFZ4tdno4Bm9QmqijsyCo/yjZUEzWq5Gpl4+Pe1uQ=
+    branches:
+      - master
+
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=Gdaimon_cupon-mercado-libre
 deploy:
   provider: heroku
   api_key: ${HEROKU}
   app: cupon-mercado-libre
+  on:
+    branch: master
 before_install:
   - chmod +x mvnw
+
+
+  # Required metadata
+  sonar.projectKey=java-sonar-runner-simple:master
+  sonar.projectName=Rss-service
+  sonar.projectVersion=1.0
+
+  # Language
+  sonar.language=java
+
+  # Encoding of the source files
+  sonar.sourceEncoding=UTF-8
