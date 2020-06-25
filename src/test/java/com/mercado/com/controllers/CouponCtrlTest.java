@@ -106,7 +106,7 @@ class CouponCtrlTest {
 		Map < String, Float > listaProductosEncontrados = CouponCtrl.productosEncontrados ( listaProductosBuscar );
 		
 		Map < String, Float > itemsExpected = new HashMap <> ( );
-		itemsExpected.put ( "MLA860477515", 23999f );
+		itemsExpected.put ( "MLA860477515", 25999f );
 		itemsExpected.put ( "MLA805281803", 13499f );
 		
 		Assert.assertEquals ( itemsExpected, listaProductosEncontrados );
