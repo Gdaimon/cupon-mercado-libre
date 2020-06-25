@@ -1,4 +1,9 @@
 language: java
+os: osx
+jdk:
+  - oraclejdk8
+git:
+  depth: 3
 branches:
   only:
     - master
@@ -10,13 +15,31 @@ addons:
   sonarcloud:
     organization: "gdaimon"
     token:
-      secure: "Gdaimon_cupon-mercado-libre" # encrypted value of your token
+      secure: ${SONAR_TOKEN}
+    branches:
+      - master
 
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 deploy:
   provider: heroku
-  api_key: $HEROKU
+  api_key: ${HEROKU}
+  app: cupon-mercado-libre
   on:
     branch: master
+    #repo: Gdaimon/cupon-mercado-libre
+before_install:
+  - chmod +x mvnw
+
+
+  # Required metadata
+  sonar.projectKey=java-sonar-runner-simple:master
+  sonar.projectName=Rss-service
+  sonar.projectVersion=1.0
+
+  # Language
+  sonar.language=java
+
+  # Encoding of the source files
+  sonar.sourceEncoding=UTF-8
