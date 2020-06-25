@@ -45,8 +45,8 @@
 ##  sonar.sourceEncoding=UTF-8
 
 language: java
-jdk:
-  - oraclejdk8
+#jdk:
+#  - oraclejdk8
 deploy:
   provider: heroku
   api_key: ${HEROKU}
