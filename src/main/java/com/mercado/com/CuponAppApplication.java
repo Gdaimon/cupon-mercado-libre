@@ -1,7 +1,5 @@
 package com.mercado.com;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +12,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 @EnableScheduling
 public class CuponAppApplication {
-	
-	private static final Logger logger = LoggerFactory.getLogger ( CuponAppApplication.class );
+
+//	private static final Logger logger = LoggerFactory.getLogger ( CuponAppApplication.class );
 	
 	public static void main ( String[] args ) {
 		SpringApplication.run ( CuponAppApplication.class, args );
@@ -29,7 +27,7 @@ public class CuponAppApplication {
 		threadPoolTaskExecutor.setMaxPoolSize ( 3 );
 		threadPoolTaskExecutor.setQueueCapacity ( 600 );
 		threadPoolTaskExecutor.afterPropertiesSet ( );
-		logger.info ( "ThreadPoolTaskExecutor set" );
+//		logger.info ( "ThreadPoolTaskExecutor set" );
 		return threadPoolTaskExecutor;
 	}
 	

@@ -1,12 +1,15 @@
 package com.mercado.com.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mercado.com.models.Item;
+import com.mercado.com.models.ItemsCoupon;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +30,13 @@ public class CouponCtrl {
 	 * @param total
 	 * @return
 	 */
-	public static JSONObject createJSONResponse ( List < String > listaProductosCoupon, Float total ) {
-		JSONObject resultado = new JSONObject ( );
-		resultado.put ( "item_ids", listaProductosCoupon );
-		resultado.put ( "total", total );
-		return resultado;
+	public static String createJSONResponse ( List < String > listaProductosCoupon, Float total ) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper ( );
+		ItemsCoupon ItemsRespuesta = new ItemsCoupon ( );
+		ItemsRespuesta.setItemIds ( listaProductosCoupon );
+		ItemsRespuesta.setTotal ( total );
+		String jsonString = mapper.writeValueAsString ( ItemsRespuesta );
+		return jsonString;
 	}
 	
 	/**
@@ -58,13 +63,11 @@ public class CouponCtrl {
 	public Map < String, Float > productosEncontrados ( List < String > listaProductos ) throws IOException {
 		Map < String, Float > items = new HashMap <> ( );
 		for ( String producto : listaProductos ) {
-			JSONObject productJSON = consultarProducto ( producto );
-			Optional < JSONObject > optionalJson = Optional.ofNullable ( productJSON );
+			Item item = consultarProducto ( producto );
+			Optional < Item > optionalJson = Optional.ofNullable ( item );
 			if ( optionalJson.isPresent ( ) ) {
-				if ( productJSON.get ( "status" ).equals ( "active" ) ) {
-					items.put ( String.valueOf ( productJSON.get ( "id" ) ),
-									Float.parseFloat ( String.valueOf ( productJSON.get ( "price" ) ) )
-					);
+				if ( item.getStatus ( ).equals ( "active" ) ) {
+					items.put ( item.getId ( ), item.getPrice ( ) );
 				}
 			}
 		}
@@ -77,25 +80,26 @@ public class CouponCtrl {
 	 * @return
 	 */
 	@Async ( "processExecutor" )
-	public JSONObject consultarProducto ( String producto ) throws IOException {
+	public Item consultarProducto ( String producto ) throws IOException {
+		ObjectMapper mapper = new ObjectMapper ( );
 		final CloseableHttpClient httpClient = HttpClients.createDefault ( );
 		final String URL = "https://api.mercadolibre.com/items/";
-		JSONObject product = null;
+		Item item = null;
 		
 		HttpGet httpGet = new HttpGet ( URL + producto );
 		try ( CloseableHttpResponse response = ( CloseableHttpResponse ) httpClient.execute ( httpGet ) ) {
 			HttpEntity entity = response.getEntity ( );
 			if ( entity != null && response.getStatusLine ( ).getStatusCode ( ) == 200 ) {
 				String productPlain = EntityUtils.toString ( entity );
-				product = new JSONObject ( productPlain );
+				item = mapper.readValue ( productPlain, Item.class );
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace ( );
-			return product;
+			return item;
 		} finally {
 			httpClient.close ( );
 		}
-		return product;
+		return item;
 	}
 	
 	/**
@@ -105,7 +109,6 @@ public class CouponCtrl {
 	 * @return
 	 */
 	public static List < String > calculate ( Map < String, Float > items, Float amount ) {
-		
 		final Map < String, Float > sortedItems = sortedMap ( items );
 		List < String > resultItems = new ArrayList <> ( );
 		Float total = 0f;
@@ -147,29 +150,16 @@ public class CouponCtrl {
 	}
 	
 	@PostMapping ( "/coupon" )
-	public ResponseEntity < String > productosCoupon ( @RequestBody Map < String, Object > json ) throws IOException {
-		List < String > listaProductos = ( List < String > ) json.get ( "item_ids" );
-		Float amount = Float.parseFloat ( json.get ( "amount" ).toString ( ) );
-		Map < String, Float > items = productosEncontrados ( listaProductos );
-		List < String > listaProductosCoupon = calculate ( items, amount );
+	public ResponseEntity < String > productosCoupon ( @RequestBody ItemsCoupon itemsCoupon ) throws IOException {
+		Map < String, Float > items = productosEncontrados ( itemsCoupon.getItemIds ( ) );
+		List < String > listaProductosCoupon = calculate ( items, itemsCoupon.getAmount ( ) );
 		Float total = totalProductosCoupon ( listaProductosCoupon, items );
-		JSONObject resultado = createJSONResponse ( listaProductosCoupon, total );
-		System.out.println ( resultado );
+		String ItemsRespuesta = createJSONResponse ( listaProductosCoupon, total );
 		if ( total > 0 ) {
-			return new ResponseEntity <> ( resultado.toString ( ), HttpStatus.OK );
+			return new ResponseEntity <> ( ItemsRespuesta, HttpStatus.OK );
 		} else {
-			return new ResponseEntity <> ( resultado.toString ( ), HttpStatus.NOT_FOUND );
+			return new ResponseEntity <> ( ItemsRespuesta, HttpStatus.NOT_FOUND );
 		}
-		
-	}
-	
-	/**
-	 * Metodo para convertir un JSONArray en un List<String> de items
-	 * @param arregloItems
-	 * @return
-	 */
-	private List < String > convertirListaItems ( JSONArray arregloItems ) {
-		return arregloItems.toList ( ).stream ( ).map ( item -> item.toString ( ) ).collect ( Collectors.toList ( ) );
 	}
 	
 	@GetMapping ( "" )

@@ -1,5 +1,6 @@
 package com.mercado.com.controllers;
 
+import com.mercado.com.models.Item;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -11,14 +12,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith ( SpringJUnit4ClassRunner.class )
 @WebAppConfiguration
 @ActiveProfiles ( profiles = "non-async" )
 class CouponCtrlTest {
-	
-	private CountDownLatch lock = new CountDownLatch ( 1 );
 	
 	/**
 	 * Ordenar los items de menor a mayor precio
@@ -100,12 +100,14 @@ class CouponCtrlTest {
 	public void consultarProducto ( ) throws IOException {
 		CouponCtrl couponCtrl = new CouponCtrl ( );
 		String product = "MLA805281803";
-		String productExpected = "{id:MLA805281803,price:13999}";
-		JSONObject productJSON = couponCtrl.consultarProducto ( product );
-		JSONObject productResult = new JSONObject ( );
-		productResult.put ( "id", productJSON.get ( "id" ) );
-		productResult.put ( "price", productJSON.get ( "price" ) );
-		JSONAssert.assertEquals ( productExpected, productResult, true );
+		Item productExpected = new Item ( );
+		productExpected.setId ( "MLA805281803" );
+		productExpected.setPrice ( 13999f );
+		productExpected.setStatus ( "active" );
+		Item item = couponCtrl.consultarProducto ( product );
+		assertThat ( item ).isEqualToComparingFieldByField ( productExpected );
+		
+		
 	}
 	
 	/**
