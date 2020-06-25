@@ -38,7 +38,7 @@ aplicación gratuita para Windows, GNU/Linux y OS X.
 > *Request:*
 >   ```
 >   {
->       "items_id": ["MLA860477515", "MLA805281803"],
+>       "item_ids": ["MLA860477515", "MLA805281803"],
 >       "amount": 40000
 >   }
 >   ```
