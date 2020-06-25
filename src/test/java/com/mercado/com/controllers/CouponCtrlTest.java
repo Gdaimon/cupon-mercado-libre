@@ -3,12 +3,22 @@ package com.mercado.com.controllers;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
+@RunWith ( SpringJUnit4ClassRunner.class )
+@WebAppConfiguration
+@ActiveProfiles ( profiles = "non-async" )
 class CouponCtrlTest {
+	
+	private CountDownLatch lock = new CountDownLatch ( 1 );
 	
 	/**
 	 * Ordenar los items de menor a mayor precio
@@ -88,9 +98,10 @@ class CouponCtrlTest {
 	 */
 	@Test
 	public void consultarProducto ( ) throws IOException {
+		CouponCtrl couponCtrl = new CouponCtrl ( );
 		String product = "MLA805281803";
-		String productExpected = "{id:MLA805281803,price:13499}";
-		JSONObject productJSON = CouponCtrl.consultarProducto ( product );
+		String productExpected = "{id:MLA805281803,price:13999}";
+		JSONObject productJSON = couponCtrl.consultarProducto ( product );
 		JSONObject productResult = new JSONObject ( );
 		productResult.put ( "id", productJSON.get ( "id" ) );
 		productResult.put ( "price", productJSON.get ( "price" ) );
@@ -102,12 +113,13 @@ class CouponCtrlTest {
 	 */
 	@Test
 	public void listaProductosEncontrados ( ) throws IOException {
+		CouponCtrl couponCtrl = new CouponCtrl ( );
 		List < String > listaProductosBuscar = Arrays.asList ( "MLA805281803", "MLA860477515" );
-		Map < String, Float > listaProductosEncontrados = CouponCtrl.productosEncontrados ( listaProductosBuscar );
+		Map < String, Float > listaProductosEncontrados = couponCtrl.productosEncontrados ( listaProductosBuscar );
 		
 		Map < String, Float > itemsExpected = new HashMap <> ( );
 		itemsExpected.put ( "MLA860477515", 25999f );
-		itemsExpected.put ( "MLA805281803", 13499f );
+		itemsExpected.put ( "MLA805281803", 13999f );
 		
 		Assert.assertEquals ( itemsExpected, listaProductosEncontrados );
 	}

@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -53,7 +54,8 @@ public class CouponCtrl {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Map < String, Float > productosEncontrados ( List < String > listaProductos ) throws IOException {
+	@Async ( "processExecutor" )
+	public Map < String, Float > productosEncontrados ( List < String > listaProductos ) throws IOException {
 		Map < String, Float > items = new HashMap <> ( );
 		for ( String producto : listaProductos ) {
 			JSONObject productJSON = consultarProducto ( producto );
@@ -74,7 +76,8 @@ public class CouponCtrl {
 	 * @param producto
 	 * @return
 	 */
-	public static JSONObject consultarProducto ( String producto ) throws IOException {
+	@Async ( "processExecutor" )
+	public JSONObject consultarProducto ( String producto ) throws IOException {
 		final CloseableHttpClient httpClient = HttpClients.createDefault ( );
 		final String URL = "https://api.mercadolibre.com/items/";
 		JSONObject product = null;
