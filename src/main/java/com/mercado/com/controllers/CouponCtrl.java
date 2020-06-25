@@ -172,8 +172,9 @@ public class CouponCtrl {
 	@GetMapping ( "" )
 	public ResponseEntity < String > welcome ( ) {
 		JSONObject resultado = new JSONObject ( );
-		resultado.put ( "message", "Bienvenido a la API, dirigete a la URL" );
-		resultado.put ( "url", "http://localhost:8080/api/v1/coupon" );
+		resultado.put ( "message", "Bienvenido a la API, dirigete a la URL POST" );
+		resultado.put ( "url", "https://cupon-mercado-libre.herokuapp.com/api/v1/coupon" );
+		resultado.put ( "documentacion", "https://cupon-mercado-libre.herokuapp.com/swagger-ui.html" );
 		return new ResponseEntity <> ( resultado.toString ( ), HttpStatus.OK );
 	}
 	
