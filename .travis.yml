@@ -11,9 +11,9 @@ notifications:
       - darkklitos@gmail.com
 addons:
   sonarcloud:
-    organization: gdaimon
+    organization: "gdaimon"
     token:
-      secure: $SONAR_TOKEN
+      secure: "b5c4WPg7r+8hf0N72NUzdxD0+42cmJBjDL7EuuFeK/z2T5sam6a6z700pP4rM4z724nUxXt5Eh7Lh+vCfA87a/ORxiYb/yGd/SbkqKN63xyqdQtQwliT2Rk3Ra32LmXBXxzhBivv2fXg66qO3h0UUcKeAgY86Odfn8BsZQW5iTiW0jI2x0Q7DlqZhjFO5Q9jcilEBdiWSkuWlw+kaA7yZP+IGsjpWFSfnRnfT2cudRpkD24QCECt6/zk1sVvXtmmr5AR8YuOJu9VjYdx1biJ5H/q6rL63ciB87VCjFKRfwxrPgw0TZ8GZogmfwN2ac8FbR7yqQhi00XLg4uqZO+KNoBrrs/2/ndGymLTjJwyASnMtWZrQLDFUOLBPm3h4Ih0BH2RNIaX3KAdi+lpkr1Q4qTzZjlZ1UDDqi571XBzAxAoDUmxHubV1cOFAF4nmkEqppM+lwela6FlGGONcK8LElQVJBoLZ6WLcqkGuXcZJB67SAm4HCbCH6qpmO9S4v2GrIp8vgg71aeHAKKwWB+IiCIkjP5/USdMM8XggLpAS+TfSlzJIFsSt23yqc+3WnXmtqv6puCQFUkVWhhsWrjN9Obda3Z0Usn4LXqXB5NZNJVH3Je2cQfJZxuY29FhD0riH0ZID52nR1Y5wmNxEZUxHvgmt/oGRLKAJ8NlShLTbCg="
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=Gdaimon_cupon-mercado-libre
