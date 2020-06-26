@@ -11,7 +11,7 @@ notifications:
       - darkklitos@gmail.com
 addons:
   sonarcloud:
-    organization: "gdaimon"
+    organization: gdaimon
     token:
       secure: $SONAR_TOKEN
 script:
