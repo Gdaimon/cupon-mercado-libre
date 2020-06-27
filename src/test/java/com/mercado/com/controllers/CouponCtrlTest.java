@@ -99,10 +99,10 @@ class CouponCtrlTest {
 	@Test
 	public void consultarProducto ( ) throws IOException {
 		CouponCtrl couponCtrl = new CouponCtrl ( );
-		String product = "MLA805281803";
+		String product = "MLA864661029";
 		Item productExpected = new Item ( );
-		productExpected.setId ( "MLA805281803" );
-		productExpected.setPrice ( 13999f );
+		productExpected.setId ( "MLA864661029" );
+		productExpected.setPrice ( 31000f );
 		productExpected.setStatus ( "active" );
 		Item item = couponCtrl.consultarProducto ( product );
 		assertThat ( item ).isEqualToComparingFieldByField ( productExpected );
@@ -116,12 +116,12 @@ class CouponCtrlTest {
 	@Test
 	public void listaProductosEncontrados ( ) throws IOException {
 		CouponCtrl couponCtrl = new CouponCtrl ( );
-		List < String > listaProductosBuscar = Arrays.asList ( "MLA805281803", "MLA860477515" );
+		List < String > listaProductosBuscar = Arrays.asList ( "MLA864661029", "MLA860477515" );
 		Map < String, Float > listaProductosEncontrados = couponCtrl.productosEncontrados ( listaProductosBuscar );
 		
 		Map < String, Float > itemsExpected = new HashMap <> ( );
-		itemsExpected.put ( "MLA860477515", 25999f );
-		itemsExpected.put ( "MLA805281803", 13999f );
+		itemsExpected.put ( "MLA860477515", 24999f );
+		itemsExpected.put ( "MLA864661029", 31000f );
 		
 		Assert.assertEquals ( itemsExpected, listaProductosEncontrados );
 	}
